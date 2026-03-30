@@ -116,7 +116,7 @@ button {
     display: none;
     min-height: 100dvh;
     flex-direction: column;
-    padding-bottom: 90px
+    margin-left: 70px
 }
 
 .scr.on {
@@ -490,15 +490,17 @@ button {
 
 .bnav {
     position: fixed;
-    bottom: 0;
     left: 0;
-    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 70px;
     background: var(--W);
-    border-top: 2px solid var(--G8);
+    border-right: 2px solid var(--G8);
     display: flex;
+    flex-direction: column;
     z-index: 99;
-    padding-bottom: var(--safe-b);
-    overflow-x: auto;
+    padding-top: 10px;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none
 }
@@ -508,14 +510,16 @@ button {
 }
 
 .bn {
-    min-width: 60px;
+    min-height: 60px;
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px 6px 6px;
+    justify-content: center;
+    padding: 8px 6px;
     cursor: pointer;
-    position: relative
+    position: relative;
+    width: 100%
 }
 
 .bn-i {
@@ -537,10 +541,10 @@ button {
 .bn.on::after {
     content: '';
     position: absolute;
-    top: -2px;
-    left: 15%;
-    right: 15%;
-    height: 3px;
+    left: -2px;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
     background: var(--R)
 }
 
