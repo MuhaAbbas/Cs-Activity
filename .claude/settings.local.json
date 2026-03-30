@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(grep -r \"CS\\\\|Cognitive Solutions\" 'c:\\\\Users\\\\GA\\\\Downloads\\\\New folder\\\\Cs-Portal-Admin' --include=*.html --include=*.js)"
+    ]
+  }
+}
