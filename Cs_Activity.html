@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>CNC Electric Pakistan — Activity Reporter</title>
+  <script>window.location.replace('index.html');</script>
+  <link rel="stylesheet" href="activity.css">
+</head>
+
+<body>
+
+  <!-- ═══ TOASTS + LOADING ═══ -->
+  <div id="toasts"></div>
+  <div id="offline-bar">⚠️ Offline</div>
+  <div class="load-ov" id="load-ov">
+    <div class="load-box">
+      <div class="load-spin"></div>
+      <div class="load-msg" id="load-msg">Loading...</div>
+      <div class="load-sub" id="load-sub"></div>
+    </div>
+  </div>
+
+  <!-- ═══ LOGIN SCREEN ═══ -->
+  <div id="s-login" class="scr on">
+    <div class="lw">
+      <div class="lh">
+        <div class="lh-icon">⚡</div>
+        <div class="lh-t">CNC <em>Electric Pakistan</em></div>
+        <div class="lh-s">Sign in to continue</div>
+      </div>
+      <div class="lc">
+        <div class="ltabs">
+          <div class="ltab on" id="lt-si" onclick="App.ltab('si')">Sign In</div>
+          <div class="ltab" id="lt-rg" onclick="App.ltab('rg')">Register</div>
+        </div>
+        <div id="lf-si">
+          <div class="fg"><label class="fl">Username or Email</label><input class="fi" id="li-u" placeholder="Username or email" autocomplete="username"></div>
+
+          <div class="fg"><label class="fl">Password</label><input class="fi" id="li-p" type="password"
+              placeholder="Password" autocomplete="current-password"></div>
+          <button class="btn btn-R" id="si-btn" onclick="App.signIn()">Sign In →</button>
+        </div>
+        <div id="lf-rg" style="display:none">
+          <div class="fg"><label class="fl">Full Name</label><input class="fi" id="rg-n"></div>
+          <div class="fg"><label class="fl">Username</label><input class="fi" id="rg-u"></div>
+          <div class="fg"><label class="fl">Email</label><input class="fi" id="rg-e" type="email" placeholder="email@example.com" autocomplete="email"></div>
+          <div class="fg"><label class="fl">Password</label><input class="fi" id="rg-p" type="password"></div>
+          <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="rg-w" type="tel" placeholder="+92...">
+          </div>
+          <button class="btn btn-R" id="rg-btn" onclick="App.register()">Register →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ EMPLOYEE PORTAL ═══ -->
+  <div id="s-emp" class="scr">
+    <div class="topbar">
+      <div class="tb-l">
+        <div class="tb-b">CNC <em>Electric Pakistan</em></div>
+        <span class="tb-ver">V42</span>
+        <span class="tb-date">29Mar2026 · 12:00</span>
+      </div>
+      <div class="tb-r">
+        <span style="font-size:10px;color:var(--G5)" id="emp-name"></span>
+        <button class="tb-out" onclick="App.logout()">Out</button>
+      </div>
+    </div>
+
+    <!-- ═══ HOME PAGE ═══ -->
+    <div id="pg-home" class="page on">
+
+      <!-- Stats -->
+      <div class="mst">
+        <div class="ms">
+          <div class="ms-n" id="ms-rpt">—</div>
+          <div class="ms-l">Reports</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n" id="ms-vis">—</div>
+          <div class="ms-l">Visits</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n" id="ms-km">—</div>
+          <div class="ms-l">KM</div>
+          <div class="ms-sub" id="ms-km-rs"></div>
+        </div>
+        <div class="ms" style="border-top:3px solid var(--R)">
+          <div class="ms-n" style="color:var(--R)" id="ms-ded">—</div>
+          <div class="ms-l">Deductions</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:9px;color:var(--G5);margin-bottom:6px" id="home-ver"></div>
+
+      <!-- Stale session banner -->
+      <div class="stale-banner" id="stale-banner"></div>
+
+      <!-- ═══ STATE 1: NOT LOGGED ═══ -->
+      <div id="s-idle" class="jstate on">
+        <div class="jcard">
+          <div class="jcard-icon">📍</div>
+          <div class="jcard-title">Mark Attendance</div>
+          <div class="jcard-sub">Tap to start your day. GPS verifies location.</div>
+        </div>
+        <button class="jbtn jbtn-red" id="att-btn" onclick="App.markAttendance()">📍 Mark Attendance</button>
+        <!-- Quick Leave Request -->
+        <div class="sec"
+          onclick="var e=document.getElementById('home-lv-form');e.style.display=e.style.display==='none'?'block':'none';this.textContent=e.style.display==='none'?'▸ Request Leave':'▾ Request Leave'">
+          ▸ Request Leave</div>
+        <div id="home-lv-form" style="display:none;padding:8px 0">
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <div style="flex:1"><label
+                style="font-size:10px;font-weight:700;color:var(--G5);display:block;margin-bottom:2px">From</label><input
+                type="date" id="hlv-from"
+                style="width:100%;padding:8px;border:2px solid var(--G8);border-radius:8px;font-size:12px"></div>
+            <div style="flex:1"><label
+                style="font-size:10px;font-weight:700;color:var(--G5);display:block;margin-bottom:2px">To</label><input
+                type="date" id="hlv-to"
+                style="width:100%;padding:8px;border:2px solid var(--G8);border-radius:8px;font-size:12px"></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <div style="flex:1"><label
+                style="font-size:10px;font-weight:700;color:var(--G5);display:block;margin-bottom:2px">Leave
+                Type</label><select id="hlv-type"
+                style="width:100%;padding:8px;border:2px solid var(--G8);border-radius:8px;font-size:12px"
+                onchange="document.getElementById('hlv-half-wrap').style.display=this.value==='half'?'block':'none';if(this.value==='half'){document.getElementById('hlv-to').value=document.getElementById('hlv-from').value;document.getElementById('hlv-to').disabled=true}else{document.getElementById('hlv-to').disabled=false}">
+                <option value="full">Full Day</option>
+                <option value="half">Half Day</option>
+              </select></div>
+            <div style="flex:1;display:none" id="hlv-half-wrap"><label
+                style="font-size:10px;font-weight:700;color:var(--G5);display:block;margin-bottom:2px">Which
+                Half</label><select id="hlv-half"
+                style="width:100%;padding:8px;border:2px solid var(--G8);border-radius:8px;font-size:12px">
+                <option value="first">First Half (Morning)</option>
+                <option value="second">Second Half (Afternoon)</option>
+              </select></div>
+          </div>
+          <div style="margin-bottom:8px"><input id="hlv-reason" placeholder="Reason..."
+              style="width:100%;padding:8px;border:2px solid var(--G8);border-radius:8px;font-size:12px"></div>
+          <button class="jbtn jbtn-red" style="font-size:12px;padding:10px" onclick="App.quickLeave()">📋 Submit
+            Leave</button>
+        </div>
+        <!-- See Recent -->
+        <div class="sec"
+          onclick="var e=document.getElementById('home-recent');e.style.display=e.style.display==='none'?'block':'none';if(e.style.display==='block')App.loadHomeRecent();this.textContent=e.style.display==='none'?'▸ See Recent':'▾ See Recent'">
+          ▸ See Recent</div>
+        <div id="home-recent" style="display:none;padding:8px 0"></div>
+      </div>
+
+      <!-- ═══ STATE 2A: AT OFFICE ═══ -->
+      <div id="s-at_office" class="jstate">
+        <div class="loc-bar loc-bar-grn" id="office-bar">
+          <div class="loc-icon">🏢</div>
+          <div>
+            <div class="loc-name" id="office-name">—</div>
+            <div class="loc-detail" id="office-detail">—</div>
+          </div>
+        </div>
+        <div class="live-stats">
+          <div class="ls">
+            <div class="ls-n" id="ls-time">—</div>
+            <div class="ls-l">At Office</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="ls-visits">0</div>
+            <div class="ls-l">Visits</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="ls-km">0.0</div>
+            <div class="ls-l">KM</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="ls-claim">Rs 0</div>
+            <div class="ls-l">Claim</div>
+          </div>
+        </div>
+        <button class="jbtn jbtn-red" onclick="App.leaveForVisit()">🚶 Leave for Visit</button>
+        <button class="jbtn jbtn-ghost" onclick="App.goHome()">🏠 Check Out — Going Home</button>
+        <div class="tl" id="today-tl">
+          <div class="tl-hd">Today's Timeline</div>
+          <div id="tl-items"></div>
+        </div>
+      </div>
+
+      <!-- ═══ STATE 3: TRAVELLING ═══ -->
+      <div id="s-travelling" class="jstate">
+        <div class="gps-bar" id="travel-gps">📡 GPS: waiting...</div>
+        <div class="loc-bar" style="border-color:var(--blu);border-left:4px solid var(--blu)">
+          <div class="loc-icon">🚗</div>
+          <div>
+            <div class="loc-name">Travelling</div>
+            <div class="loc-detail" id="travel-detail">—</div>
+          </div>
+        </div>
+        <div class="live-stats">
+          <div class="ls">
+            <div class="ls-n" id="tv-km">0.0</div>
+            <div class="ls-l">KM</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="tv-time">0m</div>
+            <div class="ls-l">Travel</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="tv-claim">Rs 0</div>
+            <div class="ls-l">Claim</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="tv-visits">0</div>
+            <div class="ls-l">Visits</div>
+          </div>
+        </div>
+        <button class="jbtn jbtn-grn" onclick="App.arrivedAtClient()">📍 Arrived at Destination</button>
+        <div style="display:flex;gap:5px;margin-top:4px">
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0" onclick="App.backToOffice()">🏢 Back to
+            Office</button>
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0;color:var(--R);border-color:var(--Rl)"
+            onclick="App.goHome()">🏠 Going Home</button>
+        </div>
+        <div class="tl" style="margin-top:8px">
+          <div class="tl-hd">Today's Timeline</div>
+          <div id="tv-tl-items"></div>
+        </div>
+      </div>
+
+      <!-- ═══ STATE 4: ARRIVED — pick client ═══ -->
+      <div id="s-arrived" class="jstate">
+        <div class="loc-bar" style="border-color:var(--amb);border-left:4px solid var(--amb);background:var(--amb-bg)">
+          <div class="loc-icon">📍</div>
+          <div>
+            <div class="loc-name">You've Arrived</div>
+            <div class="loc-detail" id="arrived-detail">—</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--G2);margin:8px 0 6px">Who are you visiting?</div>
+        <div class="client-opt client-opt-hi" onclick="App.pickArrClientType('existing',this)">
+          <div class="co-icon">🏢</div>
+          <div>
+            <div class="co-title">Existing Client</div>
+            <div class="co-sub">Select from database</div>
+          </div>
+        </div>
+        <div class="client-opt" onclick="App.pickArrClientType('lead',this)">
+          <div class="co-icon">🆕</div>
+          <div>
+            <div class="co-title">New Lead</div>
+            <div class="co-sub">Add unapproved client</div>
+          </div>
+        </div>
+        <div class="client-opt" onclick="App.pickArrClientType('other',this)">
+          <div class="co-icon">📋</div>
+          <div>
+            <div class="co-title">Other</div>
+            <div class="co-sub">Bank, delivery, market visit</div>
+          </div>
+        </div>
+
+        <div id="arr-existing" style="display:none">
+          <div class="fg"><input class="fi" id="arr-search" placeholder="Search client..."
+              oninput="App.filterArrClients()"></div>
+          <div id="arr-client-list"
+            style="max-height:120px;overflow-y:auto;border:1px solid var(--G8);border-radius:8px;margin-bottom:8px">
+          </div>
+        </div>
+        <div id="arr-lead" style="display:none">
+          <div class="fg"><label class="fl">Name *</label><input class="fi" id="arr-lead-name"
+              placeholder="Company / person name"></div>
+          <div class="fg"><label class="fl">Contact</label><input class="fi" id="arr-lead-phone" type="tel"
+              placeholder="0321-XXXXXXX"></div>
+        </div>
+        <div id="arr-other" style="display:none">
+          <div class="fg"><label class="fl">Reason *</label><input class="fi" id="arr-other-reason"
+              placeholder="Bank, delivery, etc."></div>
+        </div>
+
+        <div style="font-size:12px;font-weight:800;color:var(--G2);margin:8px 0 4px">Purpose</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px" id="arr-purpose">
+          <div class="purp-chip" onclick="App.togglePurp(this)">🛒 Order</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📅 Follow-up</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📋 Demo</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">💰 Recovery</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📄 Quote</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🤝 Intro</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🔄 Complaint</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🚪 Cold</div>
+        </div>
+        <button class="jbtn jbtn-grn" onclick="App.checkInFromArrived()">✅ Check In at Client</button>
+        <div style="display:flex;gap:5px;margin-top:4px">
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0" onclick="App.jgo('travelling')">← Back</button>
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0" onclick="App.backToOffice()">🏢 Office</button>
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0;color:var(--R);border-color:var(--Rl)"
+            onclick="App.goHome()">🏠 Home</button>
+        </div>
+      </div>
+
+      <!-- ═══ STATE 5: AT CLIENT — meeting ═══ -->
+      <div id="s-at_client" class="jstate">
+        <div id="client-card"
+          style="background:#fef9c3;border:2px solid #facc15;border-left:4px solid #eab308;border-radius:var(--rl);padding:12px;margin-bottom:10px;box-shadow:var(--sh3d)">
+          <div style="font-size:14px;font-weight:800;color:#78350f" id="mc-name">—</div>
+          <div style="font-size:11px;color:#92400e;margin-top:4px" id="mc-detail">—</div>
+        </div>
+        <div style="text-align:center;margin-bottom:10px">
+          <div style="font-size:9px;font-weight:700;color:var(--G5);text-transform:uppercase">Meeting Time</div>
+          <div style="font-size:34px;font-weight:800;font-family:monospace;color:var(--amb)" id="meeting-timer">00:00
+          </div>
+          <div style="font-size:10px;color:var(--G5)" id="mc-purpose">—</div>
+        </div>
+        <div class="live-stats">
+          <div class="ls">
+            <div class="ls-n" id="mc-km">0</div>
+            <div class="ls-l">KM</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="mc-visits">1</div>
+            <div class="ls-l">Visit</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="mc-total">—</div>
+            <div class="ls-l">Total Time</div>
+          </div>
+          <div class="ls">
+            <div class="ls-n" id="mc-claim">Rs 0</div>
+            <div class="ls-l">Claim</div>
+          </div>
+        </div>
+        <button class="jbtn jbtn-red" onclick="App.leaveClient()">✅ Done — Leave Client</button>
+      </div>
+
+      <!-- ═══ STATE 6: CHECKOUT ═══ -->
+      <div id="s-checkout" class="jstate">
+        <div class="loc-bar" style="border-color:var(--grn);border-left:4px solid var(--grn)">
+          <div class="loc-icon">✅</div>
+          <div>
+            <div class="loc-name" id="co-name">Leaving —</div>
+            <div class="loc-detail" id="co-detail">—</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--G2);margin:8px 0 4px">Visit Outcome *</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px" id="co-outcomes">
+          <div class="purp-chip" onclick="App.selOutcome(this)">🎉 Order Placed</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">📄 Quote Given</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">📅 Follow-up Set</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">💰 Payment Received</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">📋 Demo Done</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">❌ Not Available</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">🔄 Complaint Logged</div>
+          <div class="purp-chip" onclick="App.selOutcome(this)">🤷 No Result</div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--G2);margin:8px 0 4px">Photos</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <label
+            style="width:60px;height:60px;border:2px dashed var(--G7);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--G6)"><span>＋</span><input
+              type="file" accept="image/*" capture="environment" style="display:none"
+              onchange="App.addVisitPhoto(event)"></label>
+          <div id="co-photos" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+        </div>
+        <div class="fg">
+          <label class="fl">Quick Notes</label>
+          <textarea class="fi" id="co-notes" style="min-height:50px;font-size:12px"
+            placeholder="Order details, next steps..."></textarea>
+        </div>
+        <button class="jbtn jbtn-grn" onclick="App.submitCheckout()">📤 Submit & Continue</button>
+        <div style="display:flex;gap:5px;margin-top:4px">
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0" onclick="App.jgo('at_client')">← Back</button>
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0" onclick="App.clearCheckout()">🗑 Clear</button>
+        </div>
+      </div>
+
+      <!-- ═══ STATE 7: WHAT'S NEXT ═══ -->
+      <div id="s-next" class="jstate">
+        <div
+          style="background:var(--grn-bg);border:2px solid var(--grn);border-left:4px solid var(--grn);border-radius:var(--rl);padding:12px;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+          <div style="font-size:24px">✅</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--grn)">Visit Saved</div>
+            <div style="font-size:11px;color:var(--G5)" id="next-detail">—</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--G2);margin:10px 0 8px">Where are you heading now?</div>
+        <div class="client-opt client-opt-hi" onclick="App.nextClient()">
+          <div class="co-icon">📍</div>
+          <div>
+            <div class="co-title">Next Client</div>
+            <div class="co-sub">Head to another visit</div>
+          </div>
+        </div>
+        <div class="client-opt" onclick="App.backToOffice()">
+          <div class="co-icon">🏢</div>
+          <div>
+            <div class="co-title">Going to Office</div>
+            <div class="co-sub">Return to office — can leave again</div>
+          </div>
+        </div>
+        <div class="client-opt" onclick="App.goHome()">
+          <div class="co-icon">🏠</div>
+          <div>
+            <div class="co-title">Going Home</div>
+            <div class="co-sub">Day over — logs final journey</div>
+          </div>
+        </div>
+        <div class="tl" style="margin-top:8px">
+          <div class="tl-hd">Today's Timeline</div>
+          <div id="next-tl-items"></div>
+        </div>
+      </div>
+      <div id="s-outside" class="jstate">
+        <div class="warn-card">
+          <div class="warn-title">⚠️ Outside Office — Unauthorized</div>
+          <div class="warn-sub" id="outside-detail">—</div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--G2);margin:8px 0 6px">What's the reason?</div>
+        <div class="client-opt" id="out-opt-client" onclick="App.pickOutsideReason('client',this)">
+          <div class="co-icon">🏢</div>
+          <div>
+            <div class="co-title">Client Visit</div>
+            <div class="co-sub">Visiting an existing client</div>
+          </div>
+        </div>
+        <div class="client-opt" id="out-opt-lead" onclick="App.pickOutsideReason('lead',this)">
+          <div class="co-icon">🆕</div>
+          <div>
+            <div class="co-title">Lead Visit</div>
+            <div class="co-sub">New prospect / unapproved client</div>
+          </div>
+        </div>
+        <div class="client-opt" id="out-opt-complaint" onclick="App.pickOutsideReason('complaint',this)">
+          <div class="co-icon">🔄</div>
+          <div>
+            <div class="co-title">Complaint</div>
+            <div class="co-sub">Assigned or phone-received</div>
+          </div>
+        </div>
+        <button class="jbtn jbtn-red" id="out-confirm-btn" style="display:none;margin-top:8px"
+          onclick="App.outsideContinue()">✅ Confirm & Mark Attendance</button>
+        <button class="jbtn jbtn-ghost" style="margin-top:6px" onclick="App.jgo('idle')">← Back</button>
+      </div>
+      <div id="s-at_location" class="jstate">
+        <div class="loc-bar" style="border-color:var(--amb);border-left:4px solid var(--amb);background:var(--amb-bg)">
+          <div class="loc-icon">📍</div>
+          <div>
+            <div class="loc-name" id="atloc-title">At Location</div>
+            <div class="loc-detail" id="atloc-detail">—</div>
+          </div>
+        </div>
+
+        <!-- For Client Visit: client search -->
+        <div id="atloc-client" style="display:none">
+          <div style="font-size:13px;font-weight:800;color:var(--G2);margin:6px 0 4px">Select Client</div>
+          <div class="fg"><input class="fi" id="atloc-search" placeholder="Type client name..."
+              oninput="App.filterAtlocClients()"></div>
+          <div id="atloc-client-list"
+            style="max-height:150px;overflow-y:auto;border:1px solid var(--G8);border-radius:8px;margin-bottom:10px">
+          </div>
+        </div>
+
+        <!-- For Lead Visit: new lead form -->
+        <div id="atloc-lead" style="display:none">
+          <div
+            style="background:var(--blu-bg);border:2px solid var(--blu);border-left:4px solid var(--blu);border-radius:var(--rl);padding:10px;margin-bottom:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--blu)">🆕 New Lead — saved as unapproved. Admin
+              reviews.</div>
+          </div>
+          <div class="fg"><label class="fl">Company / Person Name *</label><input class="fi" id="atloc-lead-name"
+              placeholder="Enter name"></div>
+          <div class="fg"><label class="fl">Contact Number</label><input class="fi" id="atloc-lead-phone" type="tel"
+              placeholder="0321-XXXXXXX"></div>
+          <div class="fg"><label class="fl">City / Area</label><input class="fi" id="atloc-lead-city"
+              placeholder="e.g. Industrial Area, Lahore"></div>
+        </div>
+
+        <!-- For Complaint -->
+        <div id="atloc-complaint" style="display:none">
+          <div
+            style="background:var(--Rbg);border:2px solid var(--R);border-left:4px solid var(--R);border-radius:var(--rl);padding:10px;margin-bottom:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--R)">🔄 Complaint Visit</div>
+          </div>
+          <div class="fg"><label class="fl">Client / Company *</label><input class="fi" id="atloc-comp-client"
+              placeholder="Client name"></div>
+          <div class="fg"><label class="fl">Complaint Details</label><input class="fi" id="atloc-comp-detail"
+              placeholder="Brief description"></div>
+        </div>
+
+        <!-- Purpose -->
+        <div style="font-size:12px;font-weight:800;color:var(--G2);margin:10px 0 4px">Purpose of Visit</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px" id="atloc-purpose">
+          <div class="purp-chip" onclick="App.togglePurp(this)">🛒 Order</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📅 Follow-up</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📋 Demo</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">💰 Recovery</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">📄 Quote</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🤝 Intro</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🔄 Complaint</div>
+          <div class="purp-chip" onclick="App.togglePurp(this)">🚪 Cold</div>
+        </div>
+
+        <button class="jbtn jbtn-grn" onclick="App.checkInAtLocation()">✅ Check In — Start Meeting</button>
+        <div id="atloc-type-picker" style="display:none;margin-bottom:8px"></div>
+        <div style="display:flex;gap:5px;margin-top:4px">
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0;font-size:11px" onclick="App.changeLocationType()">🔄
+            Change Type</button>
+          <button class="jbtn jbtn-ghost" style="flex:1;margin:0;font-size:11px;color:var(--R);border-color:var(--Rl)"
+            onclick="App.cancelAttendance()">✕ Cancel Attendance</button>
+        </div>
+      </div>
+
+      <!-- ═══ STATE 9: DAY DONE ═══ -->
+      <div id="s-done" class="jstate">
+        <div
+          style="background:var(--grn-bg);border:2px solid var(--grn);border-radius:var(--rl);padding:14px;text-align:center;margin-bottom:10px;box-shadow:var(--sh3d)">
+          <div style="font-size:36px;margin-bottom:4px">✅</div>
+          <div style="font-size:16px;font-weight:800;color:var(--grn)">Checked Out</div>
+          <div style="font-size:11px;color:var(--G5);margin-top:3px" id="done-detail">—</div>
+        </div>
+        <!-- Day totals -->
+        <div class="live-stats" id="done-totals"></div>
+        <!-- Day timeline -->
+        <div class="tl">
+          <div class="tl-hd">Today's Sessions</div>
+          <div id="done-tl-items"></div>
+        </div>
+        <button class="jbtn jbtn-ghost" style="margin-top:10px" onclick="App.markAttendance()">🔄 Log Back In — Returned
+          to Office</button>
+      </div>
+
+    </div><!-- /pg-home -->
+
+    <!-- ═══ PLACEHOLDER PAGES ═══ -->
+    <div id="pg-attend" class="page">
+      <div style="font-size:15px;font-weight:800;margin-bottom:10px">✅ Attendance & Deductions</div>
+      <div style="display:flex;gap:4px;margin-bottom:10px">
+        <button class="purp-chip on" id="att-f-week" onclick="App.loadMyAtt('week')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
+        <button class="purp-chip" id="att-f-month" onclick="App.loadMyAtt('month')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Month</button>
+      </div>
+      <!-- Attendance stats -->
+      <div class="live-stats" id="my-att-stats"></div>
+      <!-- Deduction card -->
+      <div id="my-ded-card"
+        style="display:none;background:var(--W);border:2px solid var(--G8);border-left:4px solid var(--R);border-radius:12px;padding:12px;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:800;color:var(--G5);margin-bottom:6px">💰 Deductions</div>
+        <div id="my-ded-rows"></div>
+        <div
+          style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--G8);margin-top:4px">
+          <span style="font-size:13px;font-weight:800">Total Deduction</span><span
+            style="font-size:15px;font-weight:800;color:var(--R)" id="my-ded-total">Rs 0</span></div>
+      </div>
+      <!-- Attendance list -->
+      <div id="my-att-list"></div>
+
+      <!-- Leave Application -->
+      <div style="margin-top:14px">
+        <div class="sec"
+          onclick="var e=document.getElementById('lv-form');e.style.display=e.style.display==='none'?'block':'none';this.textContent=e.style.display==='none'?'▸ 📋 Apply for Leave':'▾ 📋 Apply for Leave'">
+          ▸ 📋 Apply for Leave</div>
+        <div id="lv-form" style="display:none;padding:8px 0">
+          <div class="jcard" style="padding:14px">
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <div style="flex:1"><label
+                  style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:3px">From Date
+                  *</label><input type="date" id="lv-from"
+                  style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:13px"></div>
+              <div style="flex:1"><label
+                  style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:3px">To
+                  Date</label><input type="date" id="lv-to"
+                  style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:13px"></div>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <div style="flex:1"><label
+                  style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:3px">Leave
+                  Type</label><select id="lv-type"
+                  style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:13px"
+                  onchange="document.getElementById('lv-half-wrap').style.display=this.value==='half'?'block':'none';if(this.value==='half'){document.getElementById('lv-to').value=document.getElementById('lv-from').value;document.getElementById('lv-to').disabled=true}else{document.getElementById('lv-to').disabled=false}">
+                  <option value="full">Full Day</option>
+                  <option value="half">Half Day</option>
+                </select></div>
+              <div style="flex:1;display:none" id="lv-half-wrap"><label
+                  style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:3px">Which
+                  Half</label><select id="lv-half"
+                  style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:13px">
+                  <option value="first">First Half (Morning)</option>
+                  <option value="second">Second Half (Afternoon)</option>
+                </select></div>
+            </div>
+            <div style="margin-bottom:10px"><label
+                style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:3px">Reason
+                *</label><input id="lv-reason" placeholder="Sick leave, personal, emergency..."
+                style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:13px"></div>
+            <button class="jbtn jbtn-red" onclick="App.applyLeave()">📋 Submit Leave Request</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Leaves -->
+      <div style="margin-top:10px">
+        <div class="sec"
+          onclick="var e=document.getElementById('my-lvs');e.style.display=e.style.display==='none'?'block':'none';this.textContent=e.style.display==='none'?'▸ My Leaves':'▾ My Leaves'">
+          ▸ My Leaves</div>
+        <div id="my-lvs" style="display:none">
+          <div id="my-lv-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pg-visits" class="page">
+      <div style="font-size:15px;font-weight:800;margin-bottom:10px">📍 My Visits</div>
+      <div style="display:flex;gap:4px;margin-bottom:10px">
+        <button class="purp-chip on" id="vis-f-week" onclick="App.loadMyVisits('week')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
+        <button class="purp-chip" id="vis-f-month" onclick="App.loadMyVisits('month')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Month</button>
+      </div>
+      <div class="live-stats" id="my-vis-stats"></div>
+      <div id="my-vis-list"></div>
+    </div>
+
+    <div id="pg-plan" class="page">
+      <div class="jcard">
+        <div class="jcard-icon">📋</div>
+        <div class="jcard-title">Visit Planner</div>
+        <div class="jcard-sub">Coming soon</div>
+      </div>
+    </div>
+    <div id="pg-activity" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <div style="font-size:15px;font-weight:800;color:var(--G2)" id="a-title">📝 Daily Activity</div>
+          <div style="font-size:11px;color:var(--G5);font-weight:600" id="a-date"></div>
+        </div>
+        <span
+          style="font-size:8px;font-weight:800;padding:3px 6px;border-radius:6px;background:var(--amb-bg);color:var(--amb);display:none"
+          id="a-draft-badge">DRAFT</span>
+      </div>
+
+      <!-- Today's submitted reports -->
+      <div id="a-submitted" style="display:none"></div>
+
+      <!-- Max reached banner -->
+      <div id="a-maxed"
+        style="display:none;background:var(--grn-bg);border:2px solid var(--grn);border-radius:12px;padding:14px;text-align:center;margin-bottom:12px">
+        <div style="font-size:28px;margin-bottom:4px">✅</div>
+        <div style="font-size:14px;font-weight:800;color:var(--grn)">آج کی رپورٹس مکمل</div>
+        <div style="font-size:11px;color:var(--G5);margin-top:4px" id="a-maxed-sub">—</div>
+      </div>
+
+      <!-- Form (hidden when maxed) -->
+      <div id="a-form-wrap">
+        <div class="jcard" style="padding:14px">
+          <div style="display:flex;gap:4px;margin-bottom:12px">
+            <button class="purp-chip on" id="a-dm-today" onclick="App.setDateMode('today')"
+              style="flex:1;text-align:center;padding:10px;font-size:13px">📅 Today</button>
+            <button class="purp-chip" id="a-dm-old" onclick="App.setDateMode('old')"
+              style="flex:1;text-align:center;padding:10px;font-size:13px">📋 Old Report</button>
+          </div>
+          <div id="a-date-pick" style="display:none;margin-bottom:10px">
+            <label style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:4px">Report Date *
+              (last 1 working day only)</label>
+            <input type="date" id="a-old-date"
+              style="width:100%;padding:10px;border:2px solid var(--G8);border-radius:8px;font-size:14px">
+          </div>
+          <div style="margin-bottom:10px">
+            <label style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:4px">Activity
+              Summary * <span style="color:var(--G5);font-weight:400" id="a-msg-wc">0/2000</span></label>
+            <textarea id="a-msg" placeholder="آج کیا کیا؟ Calls, clients, proposals... #tags"
+              style="width:100%;padding:12px;border:2px solid var(--G8);border-radius:8px;font-size:14px;min-height:120px;font-family:inherit;resize:vertical"
+              oninput="App.wordCheck(this)"></textarea>
+          </div>
+          <div style="margin-bottom:10px">
+            <label style="font-size:11px;font-weight:700;color:var(--G5);display:block;margin-bottom:4px">Quick
+              Tags</label>
+            <div style="display:flex;flex-wrap:wrap;gap:4px" id="a-tags"></div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:10px">
+            <button class="jbtn jbtn-ghost" style="flex:1;font-size:11px;padding:8px;margin:0"
+              onclick="App.saveDraft()">💾 Save</button>
+            <button class="jbtn jbtn-ghost" style="flex:1;font-size:11px;padding:8px;margin:0"
+              onclick="App.fetchYesterday()">📥 Fetch</button>
+            <button class="jbtn jbtn-ghost" style="flex:1;font-size:11px;padding:8px;margin:0"
+              onclick="App.clearActForm()">🗑 Clear</button>
+          </div>
+          <button class="jbtn jbtn-red" id="a-btn" onclick="App.subAct()">Submit ✓</button>
+        </div>
+      </div>
+
+      <!-- ═══ Last 7 Days ═══ -->
+      <div style="margin-top:14px">
+        <div class="sec"
+          onclick="var el=document.getElementById('a7-wrap');el.style.display=el.style.display==='none'?'block':'none';this.textContent=el.style.display==='none'?'▸ Last 7 Days':'▾ Last 7 Days'">
+          ▾ Last 7 Days</div>
+        <div id="a7-wrap">
+          <div id="a7-list"></div>
+        </div>
+      </div>
+
+      <!-- ═══ Monthly Calendar ═══ -->
+      <div style="margin-top:10px">
+        <div class="sec"
+          onclick="var el=document.getElementById('acal-wrap');el.style.display=el.style.display==='none'?'block':'none';this.textContent=el.style.display==='none'?'▸ Monthly Calendar':'▾ Monthly Calendar'">
+          ▸ Monthly Calendar</div>
+        <div id="acal-wrap" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+            <button class="jbtn jbtn-ghost" style="width:auto;padding:6px 12px;margin:0;font-size:12px"
+              onclick="App.acalNav(-1)">◀</button>
+            <div style="font-size:14px;font-weight:800" id="acal-title">—</div>
+            <button class="jbtn jbtn-ghost" style="width:auto;padding:6px 12px;margin:0;font-size:12px"
+              onclick="App.acalNav(1)">▶</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;margin-bottom:4px">
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Mon</div>
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Tue</div>
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Wed</div>
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Thu</div>
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Fri</div>
+            <div style="font-size:9px;font-weight:700;color:var(--G5);padding:4px">Sat</div>
+            <div style="font-size:9px;font-weight:700;color:var(--R);padding:4px">Sun</div>
+          </div>
+          <div id="acal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px"></div>
+          <div style="font-size:10px;color:var(--G5);margin-top:6px;text-align:center" id="acal-sum">—</div>
+        </div>
+      </div>
+    </div>
+    <div id="pg-cal" class="page">
+      <div class="jcard">
+        <div class="jcard-icon">📅</div>
+        <div class="jcard-title">Calendar</div>
+        <div class="jcard-sub">Coming in Part 2</div>
+      </div>
+    </div>
+    <div id="pg-inbox" class="page">
+      <div class="jcard">
+        <div class="jcard-icon">💬</div>
+        <div class="jcard-title">Inbox</div>
+        <div class="jcard-sub">Coming in Part 2</div>
+      </div>
+    </div>
+    <div id="pg-summary" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:800">📊 Performance Summary</div>
+      </div>
+      <div style="display:flex;gap:4px;margin-bottom:10px">
+        <button class="purp-chip on" id="sum-week" onclick="App.loadSummary('week')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
+        <button class="purp-chip" id="sum-month" onclick="App.loadSummary('month')"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">This Month</button>
+      </div>
+      <div id="sum-content"></div>
+    </div>
+
+    <div id="pg-reports" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:800">📑 My Reports</div>
+        <span
+          style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--G9);color:var(--G5)"
+          id="rpt-cnt">0</span>
+      </div>
+      <div style="display:flex;gap:4px;margin-bottom:10px">
+        <button class="purp-chip on" id="rf-all" onclick="App.filterRpts('all',this)"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">All</button>
+        <button class="purp-chip" id="rf-act" onclick="App.filterRpts('activity',this)"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">📝 Activity</button>
+        <button class="purp-chip" id="rf-vis" onclick="App.filterRpts('visit',this)"
+          style="flex:1;text-align:center;padding:8px;font-size:12px">📍 Visit</button>
+      </div>
+      <div id="rpt-list"></div>
+      <button class="jbtn jbtn-ghost" id="rpt-more" style="display:none;font-size:12px" onclick="App.moreRpts()">Load
+        More ↓</button>
+    </div>
+
+    <!-- ═══ BOTTOM NAV ═══ -->
+    <div class="bnav">
+      <div class="bn on" onclick="App.nav('home',this)">
+        <div class="bn-i">🏠</div>
+        <div class="bn-l">Home</div>
+      </div>
+      <div class="bn" onclick="App.nav('attend',this)">
+        <div class="bn-i">✅</div>
+        <div class="bn-l">Attendance</div>
+      </div>
+      <div class="bn" onclick="App.nav('activity',this)">
+        <div class="bn-i">📝</div>
+        <div class="bn-l">Activity</div>
+      </div>
+      <div class="bn" onclick="App.nav('visits',this)">
+        <div class="bn-i">📍</div>
+        <div class="bn-l">Visits</div>
+      </div>
+      <div class="bn" onclick="App.nav('plan',this)">
+        <div class="bn-i">📋</div>
+        <div class="bn-l">Plan</div>
+      </div>
+      <div class="bn" onclick="App.nav('cal',this)">
+        <div class="bn-i">📅</div>
+        <div class="bn-l">Calendar</div>
+      </div>
+      <div class="bn" onclick="App.nav('summary',this)">
+        <div class="bn-i">📊</div>
+        <div class="bn-l">Summary</div>
+      </div>
+      <div class="bn" onclick="App.nav('inbox',this)">
+        <div class="bn-i">💬</div>
+        <div class="bn-l">Inbox</div>
+      </div>
+      <div class="bn" onclick="App.nav('reports',this)">
+        <div class="bn-i">📑</div>
+        <div class="bn-l">Reports</div>
+      </div>
+    </div>
+  </div><!-- /s-emp -->
+
+  
+<script src="activity.js"></script>
+</body>
+
+</html>
