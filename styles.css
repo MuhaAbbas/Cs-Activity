@@ -567,6 +567,16 @@ button {
     margin: 0 auto
 }
 
+.pg-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1e3a8a;
+    letter-spacing: 0.3px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    border-bottom: 3px solid rgba(30,58,138,0.15);
+}
+
 .pg {
     display: none
 }
@@ -2689,6 +2699,14 @@ button {
     border-color: var(--R)
 }
 
+select.adm-fi {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath fill='%23888' d='M8 10L0 0h16z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    padding-right: 30px;
+}
+
 .adm-chips {
     display: flex;
     gap: 4px;
@@ -4381,6 +4399,10 @@ textarea:focus {
 
 #s-admin .ct {
     padding: 16px;
+}
+
+#ap-vis {
+    padding-left: 8px;
 }
 
 /* ── Responsive Enhancement ── */
