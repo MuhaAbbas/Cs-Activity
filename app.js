@@ -2021,7 +2021,7 @@ App.loadAdmAtt = async function () {
     }
     document.getElementById('aa-pres').textContent = p;
     document.getElementById('aa-late').textContent = la;
-    document.getElementById('aa-abs').textContent = absent + (notArr > 0 ? ' + ' + notArr + '🔴' : '');
+    document.getElementById('aa-abs').textContent = (absent + notArr);
     document.getElementById('aa-leave').textContent = onLeave;
     document.getElementById('aa-nolog').textContent = nologout;
     if (!rows.length) { document.getElementById('aa-empty').style.display = 'block'; document.getElementById('aa-cnt').textContent = '0'; hideLoad(); return }
