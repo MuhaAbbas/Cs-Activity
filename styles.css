@@ -573,12 +573,19 @@ button {
     color: #1e3a8a;
     letter-spacing: 0.3px;
     padding-bottom: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
+    margin-top: 0;
     border-bottom: 3px solid rgba(30,58,138,0.15);
 }
 
+.pg-title + * {
+    margin-top: 0 !important;
+}
+
 .pg {
-    display: none
+    display: none;
+    margin: 0;
+    padding: 0;
 }
 
 .pg.on {
