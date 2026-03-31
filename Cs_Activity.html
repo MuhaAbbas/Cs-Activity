@@ -61,16 +61,18 @@
       <div class="tb-l">
         <div class="tb-b">CNC <em>Electric Pakistan</em></div>
         <span class="tb-ver">V42</span>
-        <span class="tb-date">29Mar2026 · 12:00</span>
+        <span class="tb-date" id="tb-live-date">29Mar2026 · 12:00</span>
       </div>
       <div class="tb-r">
-        <span style="font-size:10px;color:var(--G5)" id="emp-name"></span>
+        <div id="emp-av" style="width:28px;height:28px;border-radius:50%;background:var(--R);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0">?</div>
+        <span id="emp-name" style="font-size:12px;font-weight:600;color:var(--G6);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
         <button class="tb-out" onclick="App.logout()">Out</button>
       </div>
     </div>
 
     <!-- ═══ HOME PAGE ═══ -->
     <div id="pg-home" class="page on">
+      <div class="pg-header">🏠 Home</div>
 
       <!-- Stats -->
       <div class="mst">
@@ -258,7 +260,7 @@
         </div>
 
         <div id="arr-existing" style="display:none">
-          <div class="fg"><input class="fi" id="arr-search" placeholder="Search client..."
+          <div class="fg search-wrap"><input class="fi" id="arr-search" placeholder="Search client..."
               oninput="App.filterArrClients()"></div>
           <div id="arr-client-list"
             style="max-height:120px;overflow-y:auto;border:1px solid var(--G8);border-radius:8px;margin-bottom:8px">
@@ -529,7 +531,7 @@
 
     <!-- ═══ PLACEHOLDER PAGES ═══ -->
     <div id="pg-attend" class="page">
-      <div style="font-size:15px;font-weight:800;margin-bottom:10px">✅ Attendance & Deductions</div>
+      <div class="pg-header">✅ Attendance</div>
       <div style="display:flex;gap:4px;margin-bottom:10px">
         <button class="purp-chip on" id="att-f-week" onclick="App.loadMyAtt('week')"
           style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
@@ -605,8 +607,8 @@
       </div>
     </div>
 
-    <div id="pg-visits" class="page">
-      <div style="font-size:15px;font-weight:800;margin-bottom:10px">📍 My Visits</div>
+    <div id="pg-visits" class="page page-visits">
+      <div class="pg-header">📍 Visits</div>
       <div style="display:flex;gap:4px;margin-bottom:10px">
         <button class="purp-chip on" id="vis-f-week" onclick="App.loadMyVisits('week')"
           style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
@@ -618,6 +620,7 @@
     </div>
 
     <div id="pg-plan" class="page">
+      <div class="pg-header">📋 Plan</div>
       <div class="jcard">
         <div class="jcard-icon">📋</div>
         <div class="jcard-title">Visit Planner</div>
@@ -625,9 +628,10 @@
       </div>
     </div>
     <div id="pg-activity" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="pg-header">📝 Activity</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div>
-          <div style="font-size:15px;font-weight:800;color:var(--G2)" id="a-title">📝 Daily Activity</div>
+          <div style="font-size:11px;color:var(--G5);font-weight:700" id="a-title"></div>
           <div style="font-size:11px;color:var(--G5);font-weight:600" id="a-date"></div>
         </div>
         <span
@@ -723,6 +727,7 @@
       </div>
     </div>
     <div id="pg-cal" class="page">
+      <div class="pg-header">📅 Calendar</div>
       <div class="jcard">
         <div class="jcard-icon">📅</div>
         <div class="jcard-title">Calendar</div>
@@ -730,6 +735,7 @@
       </div>
     </div>
     <div id="pg-inbox" class="page">
+      <div class="pg-header">💬 Inbox</div>
       <div class="jcard">
         <div class="jcard-icon">💬</div>
         <div class="jcard-title">Inbox</div>
@@ -737,9 +743,7 @@
       </div>
     </div>
     <div id="pg-summary" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:15px;font-weight:800">📊 Performance Summary</div>
-      </div>
+      <div class="pg-header">📊 Summary</div>
       <div style="display:flex;gap:4px;margin-bottom:10px">
         <button class="purp-chip on" id="sum-week" onclick="App.loadSummary('week')"
           style="flex:1;text-align:center;padding:8px;font-size:12px">This Week</button>
@@ -750,8 +754,9 @@
     </div>
 
     <div id="pg-reports" class="page">
+      <div class="pg-header">📑 Reports</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:15px;font-weight:800">📑 My Reports</div>
+        <div>
         <span
           style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--G9);color:var(--G5)"
           id="rpt-cnt">0</span>

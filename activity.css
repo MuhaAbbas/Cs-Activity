@@ -1904,3 +1904,53 @@
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-8px); }
     }
+
+/* ═══════════════════════════════════════════════════════
+   PATCH: TAB PAGE HEADERS
+   ═══════════════════════════════════════════════════════ */
+
+/* Bold large header at top of every tab */
+.pg-header {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--G1);
+  letter-spacing: -0.3px;
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--G8);
+  line-height: 1.2;
+}
+
+/* Visits page — left spacing away from bottom nav */
+.page-visits {
+  padding-left: 20px;
+}
+
+/* Search bar with dropdown arrow */
+.search-wrap {
+  position: relative;
+}
+.search-wrap .fi {
+  padding-right: 32px;
+}
+.search-wrap::after {
+  content: '\25BC'; /* ▼ */
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  color: var(--G5);
+  pointer-events: none;
+  font-weight: 700;
+}
+
+/* Ensure page content starts at top with no phantom gaps */
+.page {
+  padding-top: 12px !important;
+}
+
+/* Home stats bar always flush to top */
+#pg-home .mst {
+  margin-top: 0;
+}

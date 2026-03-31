@@ -146,7 +146,11 @@
       /* ── Show Employee Portal ── */
       showEmp: async function () {
         this.scr('s-emp');
-        document.getElementById('emp-name').textContent = ME.name.split(' ')[0];
+        var firstName = ME.name.split(' ')[0];
+        document.getElementById('emp-name').textContent = firstName;
+        var av = document.getElementById('emp-av');
+        if (av) av.textContent = U.ini(ME.name);
+        this._startTopbarClock();
         document.getElementById('home-ver').textContent = APP_VERSION.ver + ' · ' + APP_VERSION.date + ' · ' + APP_VERSION.time;
         showLoad('Loading', 'Fetching your data...');
         try {
@@ -173,6 +177,24 @@
         if (pg === 'summary') this.loadSummary('week');
         if (pg === 'attend') this.loadMyAtt('week');
         if (pg === 'visits') this.loadMyVisits('week');
+      },
+
+      /* ── Live topbar clock ── */
+      _startTopbarClock: function () {
+        var el = document.getElementById('tb-live-date');
+        if (!el) return;
+        function tick() {
+          var d = new Date();
+          var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          var day = String(d.getDate()).padStart(2,'0');
+          var mon = months[d.getMonth()];
+          var yr = d.getFullYear();
+          var hh = String(d.getHours()).padStart(2,'0');
+          var mm = String(d.getMinutes()).padStart(2,'0');
+          el.textContent = day + mon + yr + ' · ' + hh + ':' + mm;
+        }
+        tick();
+        setInterval(tick, 30000);
       },
 
       /* ── Journey state ── */
